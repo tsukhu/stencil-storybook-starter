@@ -1,7 +1,7 @@
 import { Config } from '@stencil/core';
 
 export const config: Config = {
-  namespace: 'stencil-storybook-starter',
+  namespace: 'intermix-design-system',
   outputTargets: [
     {
       type: 'dist',
