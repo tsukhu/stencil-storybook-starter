@@ -91,7 +91,7 @@ function getKnobForProp(prop, knobOptions = {}) {
  *   container.querySelector('.placeholder').appendChild(component);
  *   ```
  */
-function getStencilTemplate({ title, description, tag, props }) {
+function getStencilTemplate({ title, description, tag, props, addHr }) {
   // build attribute="value" strings
   const attrs = Object.keys(props || {})
     .filter(prop => props[prop] != null)
@@ -111,7 +111,8 @@ function getStencilTemplate({ title, description, tag, props }) {
 		`&lt;${tag}${attrs ? ' ' + attrs : ''}&gt;&lt;/${tag}&gt;` +
 		`</code></pre>
             <a class="select-code">Select Code</a>
-        </div>
+		</div>
+		${addHr ?'<hr/>':''}
     `;
 
 	return template;
@@ -193,7 +194,7 @@ function createStencilStory({ Component, notes, states, knobs }, stories) {
 			// Next, render each state. Only the first one is interactive (with knobs).
 			// This is sort of a light-weight "chapters" addon because the community
 			// "chapters" addon only works with react :/
-			states.forEach(({ title, description, props }) => {
+			states.forEach(({ title, description, props }, index) => {
 				const containerEl = document.createElement('div');
 				const componentEl = document.createElement(tag);
 
@@ -206,6 +207,7 @@ function createStencilStory({ Component, notes, states, knobs }, stories) {
 					description,
 					tag,
 					props,
+					addHr: (index < states.length -1)?true:false
         });
 
 				containerEl.querySelector(`.placeholder`).appendChild(componentEl);

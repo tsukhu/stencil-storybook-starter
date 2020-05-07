@@ -21,7 +21,8 @@
     "test.watch": "stencil test --spec --e2e --watchAll",
     "watch": "stencil build --docs --watch",
     "storybook.run": "start-storybook --port 9001",
-    "storybook": "npm-run-all --parallel watch storybook.run"
+    "storybook": "npm-run-all --parallel watch storybook.run",
+    "generate": "stencil generate"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

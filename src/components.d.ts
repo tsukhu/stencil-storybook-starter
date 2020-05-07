@@ -6,6 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface MainNav {
+    }
     interface MyComponent {
         /**
           * The first name
@@ -52,6 +54,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLMainNavElement extends Components.MainNav, HTMLStencilElement {
+    }
+    var HTMLMainNavElement: {
+        prototype: HTMLMainNavElement;
+        new (): HTMLMainNavElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -65,11 +73,14 @@ declare global {
         new (): HTMLSimpleConfigElement;
     };
     interface HTMLElementTagNameMap {
+        "main-nav": HTMLMainNavElement;
         "my-component": HTMLMyComponentElement;
         "simple-config": HTMLSimpleConfigElement;
     }
 }
 declare namespace LocalJSX {
+    interface MainNav {
+    }
     interface MyComponent {
         /**
           * The first name
@@ -115,6 +126,7 @@ declare namespace LocalJSX {
         "startDate"?: string;
     }
     interface IntrinsicElements {
+        "main-nav": MainNav;
         "my-component": MyComponent;
         "simple-config": SimpleConfig;
     }
@@ -123,6 +135,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "main-nav": LocalJSX.MainNav & JSXBase.HTMLAttributes<HTMLMainNavElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
             "simple-config": LocalJSX.SimpleConfig & JSXBase.HTMLAttributes<HTMLSimpleConfigElement>;
         }
