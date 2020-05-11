@@ -49,6 +49,7 @@ function getKnobForProp(prop, knobOptions = {}) {
   }
   // otherwise, implicitly create knobs based on prop type or attribute name
   else if (/^(?:number|boolean|object)$/i.test(prop.type)) {
+    console.log(prop.type);
     type = prop.type.toLowerCase();
   } else if (prop.attribute.indexOf('date') !== -1) {
     type = 'date';
@@ -66,7 +67,7 @@ function getKnobForProp(prop, knobOptions = {}) {
     }
   }
 
-  console.log('generating', type, 'knob with args:', args);
+  console.log('generating', type, 'knob with args:', args, KNOBS);
 
   const val = KNOBS[type].apply(null, args);
 

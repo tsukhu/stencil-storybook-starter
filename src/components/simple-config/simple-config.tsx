@@ -33,7 +33,7 @@ export class SimpleConfig {
   /**
    * A string field which represents a color
    */
-  @Prop() backgroundColor: string;
+  @Prop() bkColor: string;
 
   /**
    * A poorly named field which should hold a color value
@@ -59,7 +59,7 @@ export class SimpleConfig {
         <dd>{this.startDate}</dd>
 
         <dt>Spewing forth their color:</dt>
-        <dd style={{backgroundColor: this.backgroundColor || 'transparent'}}>{this.backgroundColor || '(none)'}</dd>
+        <dd style={{backgroundColor: this.bkColor || 'transparent'}}>{this.bkColor || '(none)'}</dd>
 
         <dt>Spectral colors in the void:</dt>
         <dd style={{backgroundColor: this.poorlyNamedProp || 'transparent'}}>{this.poorlyNamedProp || '(none)'}</dd>

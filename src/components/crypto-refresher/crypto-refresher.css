@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+button {
+  font-size: 0.8em;
+  cursor: pointer;
+  background-color: Crimson;
+  border-radius: 5px;
+  color: white;
+  padding: 0.5em;
+  margin: 0.5em;
+  text-decoration: none;
+}
+
+button:hover {
+  background-color: FireBrick;
+  color: White;
+}
