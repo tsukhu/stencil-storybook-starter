@@ -8,9 +8,13 @@ const COLLECTIONS = [
   {
     name: 'Stencil Components',
     loader: require('../loader/index.cjs.js'),
-    componentsCtx: require.context('../dist/collection', true, /\/components\/([^/]+)\/\1\.js$/),
-    storiesCtx: require.context('../src', true, /\.story\.tsx$/)
-  }
+    componentsCtx: require.context(
+      '../dist/collection',
+      true,
+      /\/components\/([^/]+)\/\1\.js$/
+    ),
+    storiesCtx: require.context('../src', true, /\.story\.tsx$/),
+  },
 ];
 
 function loadStories() {

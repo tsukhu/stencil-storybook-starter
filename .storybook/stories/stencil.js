@@ -250,7 +250,6 @@ function buildGeneratorConfigs(componentsCtx, storiesCtx) {
 
     if (storyKey) {
       const _export = storiesCtx(storyKey).default;
-
       // If the default export is a function, then that function should
       // be used to create the story. It will be passed the "stories" object
       // where it should call stories.add(...) manually.
@@ -287,7 +286,6 @@ function buildStencilStories(name, loader, componentsCtx, storiesCtx) {
 
   // define the custom elements so they are available
   loader.defineCustomElements(window);
-
   const stories = storiesOf(name, module);
   stories.addDecorator(KNOBS.withKnobs);
 
