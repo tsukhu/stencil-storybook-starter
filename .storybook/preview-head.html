@@ -3,6 +3,12 @@
   href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
   rel="stylesheet"
 />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
+  integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ="
+  crossorigin="anonymous"
+/>
 <style>
   * {
     font-family: 'Roboto', sans-serif;
@@ -22,7 +28,6 @@
   }
 
   .code-block pre {
-    margin-bottom: 0.1em;
   }
   .code-block pre code {
     display: inline-block;
@@ -35,9 +40,13 @@
     border-bottom: 1px solid #555;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4) inset,
       0 0 20px rgba(0, 0, 0, 0.2) inset;
-    font: 16px/24px 'Courier New', Courier, 'Lucida Sans Typewriter',
-      'Lucida Typewriter', monospace;
+    font-size: small;
     overflow-x: auto;
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
   }
   .code-block a {
     font-size: 0.8em;
@@ -76,6 +85,8 @@
         window.getSelection().removeAllRanges();
         window.getSelection().addRange(range);
       }
+      document.execCommand('Copy');
+      range.remove();
     }
   });
 </script>

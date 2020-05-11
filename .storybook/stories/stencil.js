@@ -18,15 +18,15 @@ const DEFAULT_DATE = new Date();
  * one which looks like a stencil component (using duck typing).
  */
 function getComponentFromExports(_module) {
-	const key = Object.keys(_module).find(exportKey => {
-		const _export = _module[exportKey];
-		// does it quack like a stencil class component?
-		if (_export.prototype && _export.is && _export.encapsulation) {
-			return true;
-		}
-	});
+  const key = Object.keys(_module).find(exportKey => {
+    const _export = _module[exportKey];
+    // does it quack like a stencil class component?
+    if (_export.prototype && _export.is && _export.encapsulation) {
+      return true;
+    }
+  });
 
-	return _module[key];
+  return _module[key];
 }
 
 /**
@@ -35,49 +35,49 @@ function getComponentFromExports(_module) {
  * dynamically update the properties of the component.
  */
 function getKnobForProp(prop, knobOptions = {}) {
-	let type = 'text';
-	let args = [prop.attribute];
+  let type = 'text';
+  let args = [prop.attribute];
 
-	// knob options can defined using camelCase or kebab-case
-	const propCamel = Case.camel(prop.attribute);
-	const options = knobOptions[propCamel] || knobOptions[prop.attribute];
+  // knob options can defined using camelCase or kebab-case
+  const propCamel = Case.camel(prop.attribute);
+  const options = knobOptions[propCamel] || knobOptions[prop.attribute];
 
-	// if knob options are defined, use those
-	if (options) {
-		type = options.type;
-		args = args.concat(options.args);
-	}
-	// otherwise, implicitly create knobs based on prop type or attribute name
-	else if (/^(?:number|boolean|object)$/i.test(prop.type)) {
+  // if knob options are defined, use those
+  if (options) {
+    type = options.type;
+    args = args.concat(options.args);
+  }
+  // otherwise, implicitly create knobs based on prop type or attribute name
+  else if (/^(?:number|boolean|object)$/i.test(prop.type)) {
     type = prop.type.toLowerCase();
-	} else if (prop.attribute.indexOf('date') !== -1) {
-		type = 'date';
-		args[1] = DEFAULT_DATE;
-	} else if (prop.attribute.indexOf('color') !== -1) {
+  } else if (prop.attribute.indexOf('date') !== -1) {
+    type = 'date';
+    args[1] = DEFAULT_DATE;
+  } else if (prop.attribute.indexOf('color') !== -1) {
     type = 'color';
   }
 
-  if(prop.defaultValue) {
+  if (prop.defaultValue) {
     try {
-      args[1] = JSON.parse(prop.defaultValue)
-    }
-    catch(e) {
-      args[1] = (typeof prop.defaultValue === 'string') ? prop.defaultValue : undefined;
+      args[1] = JSON.parse(prop.defaultValue);
+    } catch (e) {
+      args[1] =
+        typeof prop.defaultValue === 'string' ? prop.defaultValue : undefined;
     }
   }
 
   console.log('generating', type, 'knob with args:', args);
 
-	const val = KNOBS[type].apply(null, args);
+  const val = KNOBS[type].apply(null, args);
 
-	switch (type) {
-		// knobs returns UNIX timestamp for "date" type
-		// and we need to convert it to ISO-8601
-		case 'date':
-			return new Date(val).toISOString();
-	}
+  switch (type) {
+    // knobs returns UNIX timestamp for "date" type
+    // and we need to convert it to ISO-8601
+    case 'date':
+      return new Date(val).toISOString();
+  }
 
-	return val;
+  return val;
 }
 
 /**
@@ -95,27 +95,27 @@ function getStencilTemplate({ title, description, tag, props, addHr }) {
   // build attribute="value" strings
   const attrs = Object.keys(props || {})
     .filter(prop => props[prop] != null)
-		.map(prop => {
-			return `${Case.kebab(prop)}={${JSON.stringify(props[prop])}}`;
-		})
-		.join(' ');
+    .map(prop => {
+      return `${Case.kebab(prop)}={${JSON.stringify(props[prop])}}`;
+    })
+    .join(' ');
 
-	let template =
-		`
+  let template =
+    `
         <h2>${title}</h2>
         ${description ? '<p>' + description + '</p>' : ''}
         <div class="placeholder">
         <!-- the component will be inserted here --></div>
         <div class="code-block">
             <pre><code>` +
-		`&lt;${tag}${attrs ? ' ' + attrs : ''}&gt;&lt;/${tag}&gt;` +
-		`</code></pre>
-            <a class="select-code">Select Code</a>
+    `&lt;${tag}${attrs ? ' ' + attrs : ''}&gt;&lt;/${tag}&gt;` +
+    `</code></pre>
+            <a class="select-code">Copy Code <i class="far fa-copy"></i></a>
 		</div>
-		${addHr ?'<hr/>':''}
+		${addHr ? '<hr/>' : ''}
     `;
 
-	return template;
+  return template;
 }
 
 /**
@@ -123,20 +123,20 @@ function getStencilTemplate({ title, description, tag, props, addHr }) {
  * all the properties and default values.
  */
 function getPropsWithKnobValues(Component, knobOptions = {}) {
-	return Object.keys(Component.properties || {}).reduce((obj, key) => {
-		const property = Component.properties[key];
+  return Object.keys(Component.properties || {}).reduce((obj, key) => {
+    const property = Component.properties[key];
 
-		// normalize older "attr" into newer "attribute" property
-		if (property.hasOwnProperty('attr')) {
-			property.attribute = property.attr;
-		}
-
-		if (property.hasOwnProperty('attribute')) {
-			obj[key] = getKnobForProp(property, knobOptions);
+    // normalize older "attr" into newer "attribute" property
+    if (property.hasOwnProperty('attr')) {
+      property.attribute = property.attr;
     }
 
-		return obj;
-	}, {});
+    if (property.hasOwnProperty('attribute')) {
+      obj[key] = getKnobForProp(property, knobOptions);
+    }
+
+    return obj;
+  }, {});
 }
 
 /**
@@ -167,57 +167,57 @@ function getPropsWithKnobValues(Component, knobOptions = {}) {
  *   }
  */
 function createStencilStory({ Component, notes, states, knobs }, stories) {
-	// It is important that the main container element
-	// is NOT created inside of the render function below!!
-	const mainEl = document.createElement('div');
-	const storyOpts = notes ? { notes } : {};
-	const tag = Component.is;
+  // It is important that the main container element
+  // is NOT created inside of the render function below!!
+  const mainEl = document.createElement('div');
+  const storyOpts = notes ? { notes } : {};
+  const tag = Component.is;
 
-	// Clone the "states" array and add the default state first
-	states = states && states.length ? states.slice(0) : [];
-	states.unshift({
-		title: 'Default state (use Knobs below to edit props):',
-		tag: Component.is,
-		props: {},
-	});
+  // Clone the "states" array and add the default state first
+  states = states && states.length ? states.slice(0) : [];
+  states.unshift({
+    title: 'Default state (use Knobs below to edit props):',
+    tag: Component.is,
+    props: {},
+  });
 
-	// Create the story with all of the states
-	stories.add(
-		Component.name,
-		() => {
-			mainEl.innerHTML = '';
+  // Create the story with all of the states
+  stories.add(
+    Component.name,
+    () => {
+      mainEl.innerHTML = '';
 
-			// First, add the knobs-enabled props to the default state.
-			// This MUST be done inside this render function!!
-			states[0].props = getPropsWithKnobValues(Component, knobs);
+      // First, add the knobs-enabled props to the default state.
+      // This MUST be done inside this render function!!
+      states[0].props = getPropsWithKnobValues(Component, knobs);
 
-			// Next, render each state. Only the first one is interactive (with knobs).
-			// This is sort of a light-weight "chapters" addon because the community
-			// "chapters" addon only works with react :/
-			states.forEach(({ title, description, props }, index) => {
-				const containerEl = document.createElement('div');
-				const componentEl = document.createElement(tag);
+      // Next, render each state. Only the first one is interactive (with knobs).
+      // This is sort of a light-weight "chapters" addon because the community
+      // "chapters" addon only works with react :/
+      states.forEach(({ title, description, props }, index) => {
+        const containerEl = document.createElement('div');
+        const componentEl = document.createElement(tag);
 
-				Object.keys(props).forEach(prop => {
-					componentEl[prop] = props[prop];
-				});
-
-				containerEl.innerHTML = getStencilTemplate({
-					title,
-					description,
-					tag,
-					props,
-					addHr: (index < states.length -1)?true:false
+        Object.keys(props).forEach(prop => {
+          componentEl[prop] = props[prop];
         });
 
-				containerEl.querySelector(`.placeholder`).appendChild(componentEl);
-				mainEl.appendChild(containerEl);
-			});
+        containerEl.innerHTML = getStencilTemplate({
+          title,
+          description,
+          tag,
+          props,
+          addHr: index < states.length - 1 ? true : false,
+        });
 
-			return mainEl;
-		},
-		storyOpts,
-	);
+        containerEl.querySelector(`.placeholder`).appendChild(componentEl);
+        mainEl.appendChild(containerEl);
+      });
+
+      return mainEl;
+    },
+    storyOpts
+  );
 }
 
 /**
@@ -226,10 +226,10 @@ function createStencilStory({ Component, notes, states, knobs }, stories) {
  * we have to fix some issues before rendering.
  */
 function cleanNotes(notes) {
-	if (notes) {
-		// replaces "\|" with "` `" so property tables to break
-		return notes.replace(/\\\|/g, '` `');
-	}
+  if (notes) {
+    // replaces "\|" with "` `" so property tables to break
+    return notes.replace(/\\\|/g, '` `');
+  }
 }
 
 function buildGeneratorConfigs(componentsCtx, storiesCtx) {
@@ -242,20 +242,20 @@ function buildGeneratorConfigs(componentsCtx, storiesCtx) {
     const dirName = '/' + path.basename(path.dirname(compKey)) + '/';
     const storyKey = storyKeys.find(k => k.indexOf(dirName) > -1);
 
-    if(!Component) {
+    if (!Component) {
       console.warn(`Couldn't load component ${compKey}`);
       return obj;
     }
 
-    if(storyKey) {
+    if (storyKey) {
       const _export = storiesCtx(storyKey).default;
 
       // If the default export is a function, then that function should
-			// be used to create the story. It will be passed the "stories" object
-			// where it should call stories.add(...) manually.
+      // be used to create the story. It will be passed the "stories" object
+      // where it should call stories.add(...) manually.
       if (typeof _export === 'function') {
-				return Object.assign(obj, {
-          [Component.name]: _export
+        return Object.assign(obj, {
+          [Component.name]: _export,
         });
       }
 
@@ -265,14 +265,14 @@ function buildGeneratorConfigs(componentsCtx, storiesCtx) {
           states: _export.states,
           knobs: _export.knobs,
           notes: cleanNotes(_export.notes),
-        }
+        },
       });
     }
 
     return Object.assign(obj, {
       [Component.name]: {
-        Component
-      }
+        Component,
+      },
     });
   }, {});
 }
@@ -282,9 +282,9 @@ function buildGeneratorConfigs(componentsCtx, storiesCtx) {
  * which is used to generate the individual stories.
  */
 function buildStencilStories(name, loader, componentsCtx, storiesCtx) {
-	const configs = buildGeneratorConfigs(componentsCtx, storiesCtx);
+  const configs = buildGeneratorConfigs(componentsCtx, storiesCtx);
 
-	// define the custom elements so they are available
+  // define the custom elements so they are available
   loader.defineCustomElements(window);
 
   const stories = storiesOf(name, module);
@@ -298,7 +298,7 @@ function buildStencilStories(name, loader, componentsCtx, storiesCtx) {
           // The function is responsible for calling stories.add(...) manually.
           // Pass any additional utilities such as knobs.
           config(stories, KNOBS)
-        : createStencilStory(config, stories),
+        : createStencilStory(config, stories)
     );
 }
 
