@@ -1,6 +1,6 @@
 {
   "name": "intermix-design-system",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Stencil based design system",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
