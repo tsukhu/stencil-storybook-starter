@@ -46,7 +46,7 @@ export namespace Components {
         /**
           * A string field which represents a color
          */
-        "bkColor": string;
+        "backgroundColor": string;
         /**
           * A boolean field
          */
@@ -144,7 +144,7 @@ declare namespace LocalJSX {
         /**
           * A string field which represents a color
          */
-        "bkColor"?: string;
+        "backgroundColor"?: string;
         /**
           * A boolean field
          */
